@@ -12,20 +12,23 @@ All the visualization is made out of the dataset above in Blender. To run the sc
 - Activity bar chart: https://skfb.ly/oO6tn
 
 ## How to view in Blender
-1. Pull the repo
-2. open "squirrel_active.blend"
-3. Toggle the "Bar Chart Collection" and "Scatter Plot Collection" to see work sample 1 and 2.
+1. Have Blender installed on your computer
+2. Pull the repo
+3. open ".blend" files
+4. Toggle the collections to hide and unhide objects
+
+e.g. "Bar Chart Collection" and "Scatter Plot Collection" to see work sample 1 and 2.
 
 <img width="345" alt="Screenshot 2023-11-28 at 11 29 04" src="https://github.com/yanansun0074/squirrel_3D/assets/116763187/2fadb118-a14a-4478-a79d-623b7e7fdbf7">
 
-## How to run scripts
-1. In blender, open "Scripting" workspace.
-2. Select "Text" >>> "Open", open the script files.
-- Use the "browser text to be linked" button to switch between scripts.
-- Run it with "run script" button (little triangle). The button will run the current script only.
+## How to run scripts in Blender
+1. In ".blend" file, open "Scripting" workspace. 
+2. Use the "browser text to be linked" button to switch between scripts.
+- if you could not find any script file open in Blender, Select "Text" >>> "Open", open the files file from "Scripts" folder with corresponding names.
+3. Run it with "run script" button (little triangle). The button will run the current script only.
 <img width="1440" alt="Screenshot 2023-11-28 at 11 49 37" src="https://github.com/yanansun0074/squirrel_3D/assets/116763187/7cb40608-2413-488b-bf43-58afa8c29ffd">
 
-3. Console output
+4. Console output
 
 - For Windows user: Editor Type >>> Python Console
 
