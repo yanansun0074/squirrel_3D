@@ -1,0 +1,94 @@
+# import modules
+import bpy
+import csv
+
+def read_csv(file_path):
+    with open(file_path,'r') as f:
+        reader=csv.reader(f)
+        data=list(reader)
+        return(data)
+    
+def csv_column(data,col):
+    '''Parse csv data by index as array
+    This is from Erindale https://www.youtube.com/watch?v=xWwoWi_vPTg&t=1737s'''
+    array=[]
+    for y, row in enumerate(data):
+        if y==0:
+            continue
+        array.append(row[col])
+    return(array)
+
+
+def InsertAndChangeText(TextLocation,TextLabel, TextScale):
+    
+    bpy.ops.object.text_add(location=TextLocation,enter_editmode=True)
+    bpy.context.object.scale = TextScale
+    for k in range(4):
+        bpy.ops.font.delete(type='PREVIOUS_OR_SELECTION')
+    for char in TextLabel:
+        bpy.ops.font.text_insert(text=char)
+    bpy.ops.object.editmode_toggle()
+
+################
+# Read in file
+################
+
+file_in = "/Users/apple/Desktop/Master Project/r-graphing/data/squirrel_hectar_date.csv"
+hectar = read_csv(file_in)
+
+
+# Build Date Text List
+date = [6, 8,10,12,14,18,20]
+dates = []
+for i in date:
+    dates.append("Oct" + str(i))
+    
+
+###############################################################################
+# Adding the axes 
+###############################################################################
+
+bpy.ops.mesh.primitive_cube_add(location=(-0.025,20,0))
+bpy.context.object.scale = (0.01,20,0.01)
+bpy.ops.mesh.primitive_cube_add(location=(20,-0.025,0))
+bpy.context.object.scale = (20,0.01,0.01)
+bpy.ops.mesh.primitive_cube_add(location=(0,-0.025,20))
+bpy.context.object.scale = (0.01,0.01,20)
+
+
+###############################################################################
+# Adding the ticks 
+###############################################################################
+
+
+# Direction
+InsertAndChangeText((37, -1, -1), "East", (1, 1, 1))
+bpy.context.object.rotation_euler[0] = 1.5708
+#bpy.context.object.rotation_euler[1] = 0.785398
+InsertAndChangeText((3, -1, -1), "West", (1, 1, 1))
+bpy.context.object.rotation_euler[0] = 1.5708
+#bpy.context.object.rotation_euler[1] = 0.785398
+InsertAndChangeText((-1.5, 3, 0), "South", (1, 1, 1))
+bpy.context.object.rotation_euler[0] = 1.5708
+#bpy.context.object.rotation_euler[1] = 0.785398
+InsertAndChangeText((-1.5, 37, 0), "North", (1, 1, 1))
+bpy.context.object.rotation_euler[0] = 1.5708
+#bpy.context.object.rotation_euler[1] = 0.785398
+
+# Count
+InsertAndChangeText((-6, -1, 37), "Size of Hectar", (1, 1, 1))
+bpy.context.object.rotation_euler[0] = 1.5708
+#bpy.context.object.rotation_euler[1] = 0.785398
+
+
+
+
+###############################################################################
+# Adding materials
+###############################################################################
+
+white = bpy.data.materials.get('White')
+white.use_nodes = True
+
+ob = bpy.context.active_object
+ob.data.materials.append(white)

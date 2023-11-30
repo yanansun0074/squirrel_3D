@@ -1,0 +1,40 @@
+# import modules
+import bpy
+import csv
+
+def read_csv(file_path):
+    with open(file_path,'r') as f:
+        reader=csv.reader(f)
+        data=list(reader)
+        return(data)
+    
+def csv_column(data,col):
+    '''Parse csv data by index as array
+    This is from Erindale https://www.youtube.com/watch?v=xWwoWi_vPTg&t=1737s'''
+    array=[]
+    for y, row in enumerate(data):
+        if y==0:
+            continue
+        array.append(row[col])
+    return(array)
+
+
+def InsertAndChangeText(TextLocation,TextLabel, TextScale):
+    
+    bpy.ops.object.text_add(location=TextLocation,enter_editmode=True)
+    bpy.context.object.scale = TextScale
+    for k in range(4):
+        bpy.ops.font.delete(type='PREVIOUS_OR_SELECTION')
+    for char in TextLabel:
+        bpy.ops.font.text_insert(text=char)
+    bpy.ops.object.editmode_toggle()
+    
+
+################################################
+# Read in file
+################################################
+
+file_in = "/Users/apple/Desktop/Master Project/r-graphing/data/squirrel_specific_location.csv"
+details = read_csv(file_in)
+
+print(details[0])

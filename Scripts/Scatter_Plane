@@ -1,0 +1,18 @@
+import bpy
+
+plane_materials = ['plane_m1', 'plane_m2', 'plane_m3', 'plane_m4']
+
+
+for i in range(4):
+    bpy.ops.mesh.primitive_plane_add(enter_editmode=False, align='WORLD', location=(20, 20, (i+1)* 8 - 0.5), scale=(20, 20, 20))
+    bpy.context.object.scale = (20,20,20)
+
+
+#    bpy.ops.mesh.primitive_plane_add(radius=20, view_align=False, location=(20, 20, (i+1)* 8 - 0.5))
+    material = bpy.data.materials.get(plane_materials[i])
+    bpy.context.object.data.materials.append(material)
+
+
+    
+
+

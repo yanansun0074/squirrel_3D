@@ -1,0 +1,113 @@
+# import modules
+import bpy
+import csv
+
+def read_csv(file_path):
+    with open(file_path,'r') as f:
+        reader=csv.reader(f)
+        data=list(reader)
+        return(data)
+    
+def csv_column(data,col):
+    '''Parse csv data by index as array
+    This is from Erindale https://www.youtube.com/watch?v=xWwoWi_vPTg&t=1737s'''
+    array=[]
+    for y, row in enumerate(data):
+        if y==0:
+            continue
+        array.append(row[col])
+    return(array)
+
+file_in = "/Users/apple/Desktop/Master Project/r-graphing/data/Gray_activity.csv"
+Gray = read_csv(file_in)
+file2 = "/Users/apple/Desktop/Master Project/r-graphing/data/Cinnamon_activities.csv"
+Cinnamon = read_csv(file2)
+file3 = "/Users/apple/Desktop/Master Project/r-graphing/data/Black_activities.csv"
+Black = read_csv(file3)
+
+print(Black[1][1])
+print(Gray)
+
+date = ['10142018','10102018','10082018','10062018','10182018','10122018','10202018']
+
+###############################
+# Add New Material: Gray, Black, Cinnamon
+###############################
+
+#gray = bpy.data.materials.new(name='Gray_material')
+## Make sure use_nodes is on
+#gray.use_nodes = True
+#gray.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.195876, 0.172317, 0.150404, 1)
+#bpy.data.materials["Gray_material"].node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.195876, 0.172317, 0.150404, 1)
+
+gray = bpy.data.materials.get('Gray_material')
+gray.use_nodes = True
+
+black = bpy.data.materials.get('Black_material')
+black.use_nodes = True
+
+cinnamon = bpy.data.materials.get('Cinnamon_material')
+cinnamon.use_nodes = True
+
+
+
+#########################
+# Add Gray Data
+######################### 
+bar_width_x = 2.5
+bar_width_y = 3.5
+k = -1
+for i in range(len(Gray)):
+    if Gray[i][0] in date:
+        k+=1
+        print('true')
+        for j in range(1,6):
+            bpy.ops.mesh.primitive_cube_add(size=1.0, location= (k * bar_width_x + 0.5, (j-1) * bar_width_y + 0.5, 0))
+        
+            bar = bpy.context.object
+            bpy.ops.transform.resize(value= (0.8, 1, float(Gray[i][j])/10))
+            bpy.ops.transform.translate(value = (0, 0, float(Gray[i][j])/20))
+            bpy.context.object.data.materials.append(gray)
+
+
+###################
+# Add Black Data
+###################
+k = -1
+for i in range(len(Black)):
+    if Black[i][1] in date:
+        k+=1
+        for j in range(2,7):
+            bpy.ops.mesh.primitive_cube_add(size=1.0, location= (k * bar_width_x + 0.5, (j-2) * bar_width_y + 1.5, 0))
+        
+            bar = bpy.context.object
+            bpy.ops.transform.resize(value= (0.8, 1, float(Black[i][j])/10))
+            bpy.ops.transform.translate(value = (0, 0, float(Black[i][j])/20))
+            bpy.context.object.data.materials.append(black)
+            
+##################
+# Add Cinnamon Data
+##################
+k = -1
+for i in range(len(Cinnamon)):
+    if Cinnamon[i][1] in date:
+        k+=1
+        for j in range(2,7):
+            bpy.ops.mesh.primitive_cube_add(size=1.0, location= (k * bar_width_x + 0.5, (j-2) * bar_width_y + 2.5, 0))
+            bar = bpy.context.object
+            bpy.ops.transform.resize(value= (0.8, 1, float(Cinnamon[i][j])/10))
+            bpy.ops.transform.translate(value = (0, 0, float(Cinnamon[i][j])/20))
+            bpy.context.object.data.materials.append(cinnamon)
+
+###############################################################################
+# Adding the axes 
+###############################################################################
+
+bpy.ops.mesh.primitive_cube_add(location=(-0.025,10,0))
+bpy.context.object.scale = (0.01,10,0.01)
+bpy.ops.mesh.primitive_cube_add(location=(10,-0.025,0))
+bpy.context.object.scale = (10,0.01,0.01)
+bpy.ops.mesh.primitive_cube_add(location=(0,-0.025,10))
+bpy.context.object.scale = (0.01,0.01,10)
+
+            

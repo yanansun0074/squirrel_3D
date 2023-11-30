@@ -1,0 +1,151 @@
+import bpy
+import csv
+
+def read_csv(file_path):
+    with open(file_path,'r') as f:
+        reader=csv.reader(f)
+        data=list(reader)
+        return(data)
+    
+def translate(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = (value - leftMin) / leftSpan
+
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
+
+def InsertAndChangeText(TextLocation,TextLabel, TextScale):
+    
+    bpy.ops.object.text_add(location=TextLocation,enter_editmode=True)
+    bpy.context.object.scale = TextScale
+    
+    # handle overflown
+    bpy.context.object.data.align_x = 'CENTER'
+    bpy.context.object.data.overflow = 'NONE'
+
+    bpy.context.object.data.text_boxes[0].width = 13.4
+    bpy.context.object.data.text_boxes[0].x = -6.7
+    bpy.context.object.location = TextLocation
+
+
+    for k in range(4):
+        bpy.ops.font.delete(type='PREVIOUS_OR_SELECTION')
+    for char in TextLabel:
+        bpy.ops.font.text_insert(text=char)
+    bpy.ops.object.editmode_toggle()
+
+################
+# Read in file
+################
+
+file_in = "/Users/apple/Desktop/Master Project/r-graphing/data/squirrel_details.csv"
+details = read_csv(file_in)
+
+
+###############
+# Define Material
+###############
+
+green_bar = bpy.data.materials.get('Green_bar_material')
+green_bar.use_nodes = True
+
+blue_bar = bpy.data.materials.get('Blue_bar_material')
+blue_bar.use_nodes = True
+
+orange_bar = bpy.data.materials.get('Orange_bar_material')
+orange_bar.use_nodes = True
+
+brown_bar = bpy.data.materials.get('Brown_bar_material')
+brown_bar.use_nodes = True
+
+red_bar = bpy.data.materials.get('Red_bar_material')
+red_bar.use_nodes = True
+
+yellow_bar = bpy.data.materials.get('Yellow_bar_material')
+yellow_bar.use_nodes = True
+
+black_text = bpy.data.materials.get('Black_text_material')
+black_text.use_nodes = True
+
+#cinnamon = bpy.data.materials.get('Cinnamon_material')
+#cinnamon.use_nodes = True
+
+
+#######################
+# Add notes
+#######################
+
+for i in range(1, len(details)):
+    text = False
+    plane_color = None
+    
+    # translate X to x [0,40]
+    x = translate(float(details[i][0]), -73.982, -73.95, 0, 30)
+    # translate Y to y [0,40[
+    y = translate(float(details[i][1]), 40.764, 40.801, 0, 30)
+    # translate hectar number to z
+    z = translate(int(details[i][2]), 0, 180, 0, 20)
+    
+        
+        
+#    bpy.context.object.location = (x,y,z)
+#    
+#    bpy.ops.mesh.primitive_cube_add(size=1.0, location= (x, y, 0))
+#    bar = bpy.context.object
+#    bpy.ops.transform.resize(value= (0.2, 0.2, float(z)))
+#    bpy.ops.transform.translate(value = (0, 0, float(z/2)))
+    
+#    if "tree" in details[i][4]:
+#        bar.data.materials.append(green_bar)
+        
+            
+    if "50" in details[i][4] or "40" in details[i][4] or "20" in details[i][4] or "10" in details[i][4]:
+#        bar.data.materials.append(blue_bar)
+        plane_color = blue_bar
+        text = True
+#        bpy.context.object.data.materials.append(blue_bar)
+        
+    elif "trash can" in details[i][4] or "Trash bin" in details[i][4] or "construction" in details[i][4] or "Bow Bridge" in details[i][4] or "bike" in details[i][4] or "baseball" in details[i][4]:
+#        bar.data.materials.append(orange_bar)
+        plane_color = orange_bar
+        text = True
+        
+    elif "DOGGO" in details[i][4] or "Dog" in details[i][4]:
+#        bar.data.materials.append(red_bar)
+        plane_color = red_bar
+        text = True
+        
+    elif "birds" in details[i][4] or "jays" in details[i][4]:
+#        bar.data.materials.append(yellow_bar)
+        plane_color = green_bar
+        text = True
+        
+    elif "path" in details[i][4]:
+#        bar.data.materials.append(brown_bar)
+        plane_color = brown_bar
+        text = True
+        
+        
+    
+    if text:
+        bpy.ops.mesh.primitive_plane_add(size=2, enter_editmode=False, align='WORLD', location=(x, y, z+0.5), scale=(1, 1, 1))
+        bpy.ops.transform.resize(value = (0.7, 0.3, 0.1))
+        bpy.context.object.rotation_euler[0] = 1.5708
+        bpy.context.object.data.materials.append(plane_color)
+        
+        InsertAndChangeText((x, y-0.001, z+0.5), '"' + details[i][4] + '"', (.1, .1, .1))
+        text = bpy.context.object
+        bpy.context.object.rotation_euler[0] = 1.5708
+        
+        text.data.materials.append(black_text)
+        
+        
+        
+
+        
+print("Notes added")
+            
