@@ -16,6 +16,7 @@ All the visualization is made out of the dataset above in Blender. To run the sc
 2. Pull the repo
 3. open ".blend" files
 4. Toggle the collections to hide and unhide objects
+5. Click on the "Scripts" Tab to view all the scripts (see how to run scripts below)
 
 e.g. "Bar Chart Collection" and "Scatter Plot Collection" to see work sample 1 and 2.
 
